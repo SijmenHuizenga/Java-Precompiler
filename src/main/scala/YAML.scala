@@ -1,5 +1,7 @@
 import java.util.Date
 
+import scala.io.Source
+
 /**
   * Created by Sijmen on 29-3-2017.
   */
@@ -11,13 +13,14 @@ object YAML {
     * Throws exception when file not found
     */
   def loadYaml(filename: String): Array[Any] = {
-    throw new NotImplementedError()
+    val source = Source.fromResource(filename)
+    parseStringToBlockArray(source.mkString).asInstanceOf[Array[Any]]
   }
 
   /**
     * Returns wether or not the field at the query exists.
     */
-  def hasField(yaml: Array[Any], query: String) : Boolean = {
+  def hasField(yaml: Array[Any], query: String): Boolean = {
     throw new NotImplementedError()
   }
 
@@ -83,6 +86,19 @@ object YAML {
     */
   def getYAML(yaml: Array[Any], query: String): Array[Any] = {
     throw new NotImplementedError()
+  }
+
+  private def parseStringToBlockArray(text: String): Array[String] = {
+    var out : Array[String] = Array("")
+    text.split('\n').reverse.foreach(line => {
+      if(out.last == "")
+        out(out.length-1) = line
+      else
+        out(out.length-1) = line  + "\n" + out(out.length-1)
+      if(!line.startsWith(" "))
+        out = out :+ ""
+    })
+    out.reverse
   }
 }
 

@@ -8,6 +8,13 @@ object Test {
   def main(args: Array[String]): Unit = {
     val yaml = YAML.loadYaml("test1.yaml")
 
+    yaml.foreach(l => {
+      println(l)
+      println("-------")
+    })
+
+    expectError(() => YAML.loadYaml("test99.yaml"))
+
     //test has fields
     assertTrue(YAML.hasField(yaml, "invoice"))
     assertTrue(YAML.hasField(yaml, "bill-to"))
