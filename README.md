@@ -53,6 +53,7 @@ This is just an example of an infinitive amount of input's possible with the giv
 * Constant reference using the `*`
 * multiline strings preserving multilines using `|`
 * multiline strings collapsing text using the `>` 
+* Comments using the `#`
 
 Corresponding method declerations with descriptions:
 ```
@@ -126,8 +127,8 @@ Using `[n]` you can access array elements. For example ``a.b[1]`` is "Hello Worl
 ```YAML
 a: 
     b: 
-		- Hello Country
-		- Hello World
+	- Hello Country
+	- Hello World
 ```
 When accessing fields references are flattened. So the query ``b.hello`` returns "Hello World":
 ```YAML
@@ -137,5 +138,3 @@ b: $id001
 ```
 
 All parsing will happen just-in-time. This means the input will not be parsed when loaded, but when the field is first accessed. This makes performance super effective when loading big files and only a few elements are accessed.
-
-> The laws of time are mine! AND THEY WILL OBEY ME!
