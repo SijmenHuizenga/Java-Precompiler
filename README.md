@@ -127,8 +127,8 @@ Using `[n]` you can access array elements. For example ``a.b[1]`` is "Hello Worl
 ```YAML
 a: 
     b: 
-	- Hello Country
-	- Hello World
+        - Hello Country
+        - Hello World
 ```
 When accessing fields references are flattened. So the query ``b.hello`` returns "Hello World":
 ```YAML
