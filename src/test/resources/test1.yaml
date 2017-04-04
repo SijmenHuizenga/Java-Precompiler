@@ -1,6 +1,5 @@
 invoice: 34843
 date   : 2001-01-23
-bill-to: &id001
 bill-to.given  : Chris
 bill-to.family : Dumars
 bill-to.address:
@@ -29,6 +28,6 @@ favoritemovies:
 tax  : 251.42
 total: 4443.52
 comments: >
-    Late afternoon is best.
-    Backup contact is Nancy
+    Late afternoon is best. 
+    Backup contact is Nancy 
     Billsmer @ 338-4338.

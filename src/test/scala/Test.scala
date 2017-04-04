@@ -6,10 +6,13 @@ import java.util.Date
 object Test {
 
   def main(args: Array[String]): Unit = {
+    val format = new java.text.SimpleDateFormat("dd-MM-yyyy")
+
     val yaml = YAML.loadYaml("test1.yaml")
 
 //    yaml.foreach(l => {
 //      println(l)
+//      println("----")
 //    })
 
     expectError(() => YAML.loadYaml("test99.yaml"))
@@ -18,41 +21,35 @@ object Test {
 //    val str = "invoice: test"
 //    assertTrue(q.unapplySeq(str).isDefined)
 
+
     //test has fields
     assertTrue(YAML.hasField(yaml, "invoice"))
-    assertTrue(YAML.hasField(yaml, "bill-to"))
     assertTrue(YAML.hasField(yaml, "bill-to.family"))
     assertTrue(YAML.hasField(yaml, "bill-to.address"))
     assertTrue(YAML.hasField(yaml, "bill-to.address.lines"))
     assertTrue(YAML.hasField(yaml, "ship-to"))
-    assertTrue(YAML.hasField(yaml, "ship-to.family"))
-    assertTrue(YAML.hasField(yaml, "ship-to.address"))
-    assertTrue(YAML.hasField(yaml, "ship-to.address.lines"))
+    assertEquals(YAML.getString(yaml, "bill-to.family"), "Dumars")
     assertTrue(YAML.hasField(yaml, "product"))
-    assertTrue(YAML.hasField(yaml, "product[0]"))
-    assertTrue(YAML.hasField(yaml, "product[1]"))
-    assertFalse(YAML.hasField(yaml, "product[2]"))
-    assertTrue(YAML.hasField(yaml, "product[1].description"))
-    assertTrue(YAML.hasField(yaml, "favoritemovies[2]"))
+    assertTrue(YAML.hasField(yaml, "product.[0]"))
+    assertTrue(YAML.hasField(yaml, "product.[1]"))
+    assertFalse(YAML.hasField(yaml, "product.[2]"))
+    assertTrue(YAML.hasField(yaml, "favoritemovies.[2]"))
     assertTrue(YAML.hasField(yaml, "comments"))
+    assertTrue(YAML.hasField(yaml, "product.[1].description"))
 
     //get String, Date, Int, Float
     assertEquals(YAML.getString(yaml, "invoice"), "34843")
     assertEquals(YAML.getInt(yaml, "invoice"), 34843)
-    assertEquals(YAML.getDate(yaml, "date"), new Date("2001-01-23"))
+    assertEquals(YAML.getDate(yaml, "date", format), format.parse("2001-01-23"))
     assertEquals(YAML.getString(yaml, "date"), "2001-01-23")
-    assertEquals(YAML.getString(yaml, "bill-to.family"), "Dumars")
-    assertEquals(YAML.getString(yaml, "ship-to.city"), "Royal Oak")
-    assertEquals(YAML.getString(yaml, "ship-to.city"), "Royal Oak")
-    assertEquals(YAML.getFloat(yaml, "total"), 4443.52)
-    assertEquals(YAML.getInt(yaml, "total"), 4443)
+    assertEquals(YAML.getFloat(yaml, "total"), 4443.52f)
+    expectError(() => YAML.getInt(yaml, "total"))
     assertEquals(YAML.getString(yaml, "comments"), "Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338.")
     assertEquals(YAML.getString(yaml, "bill-to.address.lines"), "458 Walkman Dr.\nSuite #292")
 
     //is array, array size
     assertTrue(YAML.isArray(yaml, "product"))
     assertTrue(YAML.isArray(yaml, "favoritemovies"))
-    assertFalse(YAML.isArray(yaml, "bill-to"))
     assertEquals(YAML.getArrayLength(yaml, "product"), 2)
     assertEquals(YAML.getArrayLength(yaml, "favoritemovies"), 3)
 
@@ -66,6 +63,13 @@ object Test {
 
     expectError(() => YAML.getString(yaml, "test"))
     expectError(() => YAML.getArray(yaml, "invoice", YAML.getString))
+
+    //variales
+    assertTrue(YAML.hasField(yaml, "ship-to.family"))
+    assertTrue(YAML.hasField(yaml, "ship-to.address"))
+    assertTrue(YAML.hasField(yaml, "ship-to.address.lines"))
+    assertTrue(YAML.hasField(yaml, "ship-to.address.city"))
+    assertEquals(YAML.getString(yaml, "ship-to.city"), "Royal Oak")
   }
 
   def assertTrue(x: Boolean): Unit ={
@@ -80,9 +84,22 @@ object Test {
     if(expected == null && actual == null)
       return
     if(expected == null || actual == null)
-      throw new IllegalArgumentException("expected " + expected + " but got " + actual)
-    if(!expected.equals(actual))
-      throw new IllegalArgumentException("expected " + expected + " but got " + actual)
+      throw new IllegalArgumentException("expected " + tostr(expected) + " but got " + tostr(actual))
+    if(expected.isInstanceOf[Array[Any]] || expected.isInstanceOf[List[Any]]){
+      if(!expected.toString.equals(expected.toString)){
+        throw new IllegalArgumentException("expected " + tostr(expected) + " but got " + tostr(actual))
+      }
+    }else if(!expected.equals(actual)){
+      throw new IllegalArgumentException("expected " + tostr(expected) + " but got " + tostr(actual))
+    }
+  }
+  
+  def tostr(vas: Any): String = {
+    vas match {
+      case null => "null"
+      case x: Array[Any] => x.toList.toString()
+      case x => x.toString
+    }
   }
 
   def expectError(predicate: () => Unit) {
