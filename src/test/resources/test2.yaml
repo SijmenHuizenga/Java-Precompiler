@@ -1,10 +1,13 @@
-1: x
-  2.3: x
-    4: x 
-	   5: x
-    4a: x
-  2a: x
-    3b: x
-       4a: x
-1a: x
-    2b: x
+cake:  
+    appel: true
+    banana: false
+    orange: true
+just:  
+    some:  
+        number:  
+            verry:  
+                long: 0
+user: "Sijmen Huizenga"
+    age: 20
+    gener: "male"
+    password: "password"
