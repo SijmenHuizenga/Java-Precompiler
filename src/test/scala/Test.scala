@@ -1,5 +1,7 @@
 import java.util.Date
 
+import YAML.YAML
+
 /**
   * Created by Sijmen on 29-3-2017.
   */
@@ -8,7 +10,7 @@ object Test {
   def main(args: Array[String]): Unit = {
     val format = new java.text.SimpleDateFormat("dd-MM-yyyy")
 
-    val yaml = YAML.loadYaml("test1.yaml")
+    val yaml = YAML.loadYaml("test2.yaml")
 
 //    yaml.foreach(l => {
 //      println(l)
@@ -55,7 +57,7 @@ object Test {
 
     //get array
     assertEquals(YAML.getArray(yaml, "favoritemovies", YAML.getString), Array("Iron Man", "Iron Man 2", "Iron Man 3"))
-    val productarray = YAML.getArray(yaml, "product", YAML.getYAML)
+    val productarray = YAML.getArray(yaml, "product", YAML.getYAML).asInstanceOf[Array[YAML]]
     assertEquals(YAML.getString(productarray(0), "sku"), "BL394D")
     assertEquals(YAML.getFloat(productarray(0), "price"), 450.00f)
     assertEquals(YAML.getFloat(productarray(1), "sku"), "BL4438H")
